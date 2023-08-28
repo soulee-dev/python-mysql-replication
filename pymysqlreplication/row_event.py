@@ -5,7 +5,7 @@ import decimal
 import datetime
 import json
 
-from typing import List, Dict, Any, Union
+from typing import List, Dict, Any, Union, Optional
 from pymysql.charset import charset_by_name
 
 from .event import BinLogEvent
@@ -28,7 +28,7 @@ class RowsEvent(BinLogEvent):
     ) -> None:
         super().__init__(from_packet, event_size, table_map,
                          ctl_connection, **kwargs)
-        self.__rows: Union[None, List[Any]] = None
+        self.__rows: Optional[List[Any]] = None
         self.__only_tables = kwargs["only_tables"]
         self.__ignored_tables = kwargs["ignored_tables"]
         self.__only_schemas = kwargs["only_schemas"]
@@ -370,7 +370,7 @@ class RowsEvent(BinLogEvent):
         ) * sign
         return t
 
-    def __read_date(self) -> Union[datetime.date, None]:
+    def __read_date(self) -> Optional[datetime.date]:
         time = self.packet.read_uint24()
         if time == 0:  # nasty mysql 0000-00-00 dates
             return None
@@ -388,7 +388,7 @@ class RowsEvent(BinLogEvent):
         )
         return date
 
-    def __read_datetime(self) -> Union[datetime.date, None]:
+    def __read_datetime(self) -> Optional[datetime.date]:
         value = self.packet.read_uint64()
         if value == 0:  # nasty mysql 0000-00-00 dates
             return None
@@ -413,7 +413,7 @@ class RowsEvent(BinLogEvent):
 
     def __read_datetime2(self,
                          column: Column
-                         ) -> Union[datetime.datetime, None]:
+                         ) -> Optional[datetime.datetime]:
         """DATETIME
 
         1 bit  sign           (1= non-negative, 0= negative)
