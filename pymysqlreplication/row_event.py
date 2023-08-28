@@ -5,7 +5,7 @@ import decimal
 import datetime
 import json
 
-from typing import List, Dict, Any, Union, Optional
+from typing import List, Dict, Any, Optional
 from pymysql.charset import charset_by_name
 
 from .event import BinLogEvent
